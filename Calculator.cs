@@ -4,16 +4,21 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+//using ComboBox = System.Windows.Forms.ComboBox;
 
 namespace HBOCalculator
 {
     public partial class Calculator : Form
     {
+
+        string[] formats = { "HH:mm", "H:mm", "HHmm" }; //value can be one of these formats
         public Calculator()
         {
             InitializeComponent();
@@ -51,13 +56,21 @@ namespace HBOCalculator
             numAirBreaksTextBox.TextChanged += ComponentChanged;
             lengthAirBreaksTextBox.TextChanged += ComponentChanged;
             DiveTableGridView.CellValueChanged += DataGridViewCellChanged;
+            resetButton.Click += resetButton_Click;
 
+            ATATextBox.Validating += TextBox_Validating;
+            minWOxygenTextBox.Validating += TextBox_Validating;
+            numAirBreaksTextBox.Validating += TextBox_Validating;
+            lengthAirBreaksTextBox.Validating += TextBox_Validating;
+            DiveRateDownComboBox.Validating += ComboBox_Validating;
+            DiveRateUpComboBox.Validating += ComboBox_Validating;
         }
 
 
         private void ComponentChanged(object sender, EventArgs e)
         {
-            CalculateDiveTable();
+            //CalculateDiveTable();
+            canCalculate();
         }
 
         private void DataGridViewCellChanged(object sender, DataGridViewCellEventArgs e)
@@ -65,7 +78,8 @@ namespace HBOCalculator
             // Trigger Calculate() only for Row 1, Cell 0 (Start time Update)
             if (e.RowIndex == 1 && e.ColumnIndex == 0)
             {
-                CalculateDiveTable();
+                //CalculateDiveTable();
+                canCalculate();
             }
         }
 
@@ -91,61 +105,154 @@ namespace HBOCalculator
             TreatmentLengthTextbox.Text = treatmentLength.ToString();
         }
 
+        private void ComboBox_Validating(object sender, CancelEventArgs e)
+        {
+            
+            if(!double.TryParse((sender as System.Windows.Forms.ComboBox).Text, out _))
+            {
+                ATAErrorProvider.SetError((sender as System.Windows.Forms.ComboBox), "Please enter a valid decimal number");
+            }
+            else
+            {
+                ATAErrorProvider.SetError((sender as System.Windows.Forms.ComboBox), string.Empty);
+            }
+        }
 
-        private bool canCalculate()
+
+        private void TextBox_Validating(object sender, CancelEventArgs e)
+        {
+            //validate textboxes as double or int based on which textbox it is
+            if ((sender as System.Windows.Forms.TextBox).Name == "ATATextBox")
+            {
+                if (!double.TryParse((sender as System.Windows.Forms.TextBox).Text, out _))
+                {
+                    e.Cancel = true;
+                    ATAErrorProvider.SetError((sender as System.Windows.Forms.TextBox), "Please enter a valid decimal number");
+                }
+                else
+                {
+                    ATAErrorProvider.SetError((sender as System.Windows.Forms.TextBox), string.Empty);
+                }
+            }
+            else
+            {
+                if (!int.TryParse((sender as System.Windows.Forms.TextBox).Text, out _))
+                {
+                    e.Cancel = true;
+                    ATAErrorProvider.SetError((sender as System.Windows.Forms.TextBox), "Please enter a valid whole number");
+                }
+                else
+                {
+                    ATAErrorProvider.SetError((sender as System.Windows.Forms.TextBox), string.Empty);
+                }
+            }
+        }
+
+        private void canCalculate()
         {
             //flag for validation of required fields
             bool canCalculate = true;
 
 
             //validate the treatment protocol combobox
-            if (string.IsNullOrEmpty(ATATextBox.Text) || string.IsNullOrEmpty(minWOxygenTextBox.Text) || string.IsNullOrEmpty(numAirBreaksTextBox.Text) ||
-                string.IsNullOrEmpty(lengthAirBreaksTextBox.Text))
+            if (string.IsNullOrEmpty(ATATextBox.Text) || !double.TryParse(ATATextBox.Text, out _))
             {
                 //TreatmentProtocolErrorProvider.SetError(TreatmentProtocolComboBox, "Please select or enter a value.");
-                TreatmentProtocolErrorMessage.Visible = true;
+                ATATextBoxErrorMessage.Visible = true;
                 canCalculate = false;
+                return; //return if error validates to true so it only shows one error at a time
             }
             else
             {
-                TreatmentProtocolErrorMessage.Visible = false; //remove error message if input is valid
+                ATATextBoxErrorMessage.Visible = false; //remove error message if input is valid
+            }
+
+            //validate the treatment protocol combobox
+            if (string.IsNullOrEmpty(minWOxygenTextBox.Text) || !int.TryParse(minWOxygenTextBox.Text, out _))
+            {
+                //TreatmentProtocolErrorProvider.SetError(TreatmentProtocolComboBox, "Please select or enter a value.");
+                //minWOxygenTextBoxErrorMessage.Visible = true;
+                canCalculate = false;
+                return; //return if error validates to true so it only shows one error at a time
+            }
+            else
+            {
+                //minWOxygenTextBoxErrorMessage.Visible = false; //remove error message if input is valid
+            }
+
+            //validate the treatment protocol combobox
+            if (string.IsNullOrEmpty(numAirBreaksTextBox.Text) || !int.TryParse(numAirBreaksTextBox.Text, out _))
+            {
+                //TreatmentProtocolErrorProvider.SetError(TreatmentProtocolComboBox, "Please select or enter a value.");
+                //numAirBreaksTextBoxErrorMessage.Visible = true;
+                canCalculate = false;
+                return; //return if error validates to true so it only shows one error at a time
+            }
+            else
+            {
+                //numAirBreaksTextBoxErrorMessage.Visible = false; //remove error message if input is valid
+            }
+
+            //validate the treatment protocol combobox
+            if (string.IsNullOrEmpty(lengthAirBreaksTextBox.Text) || !int.TryParse(lengthAirBreaksTextBox.Text, out _))
+            {
+                //TreatmentProtocolErrorProvider.SetError(TreatmentProtocolComboBox, "Please select or enter a value.");
+                //lengthAirBreaksTextBoxErrorMessage.Visible = true;
+                canCalculate = false;
+                return; //return if error validates to true so it only shows one error at a time
+            }
+            else
+            {
+                //lengthAirBreaksTextBoxErrorMessage.Visible = false; //remove error message if input is valid
             }
 
             //valdiate dive rate down combo box
-            if (string.IsNullOrEmpty(DiveRateDownComboBox.Text))
+            if (string.IsNullOrEmpty(DiveRateDownComboBox.Text) || !double.TryParse(DiveRateDownComboBox.Text, out _))
             {
-                DiveRateDownErrorMessage.Visible = true;
+                //DiveRateDownErrorMessage.Visible = true;
                 canCalculate = false;
+                return;
             }
             else
             {
-                DiveRateDownErrorMessage.Visible = false;
+                //DiveRateDownErrorMessage.Visible = false;
             }
 
             //validate dive rate up combo box
-            if (string.IsNullOrEmpty(DiveRateUpComboBox.Text))
+            if (string.IsNullOrEmpty(DiveRateUpComboBox.Text) || !double.TryParse(DiveRateUpComboBox.Text, out _))
             {
-                DiveRateUpErrorMessage.Visible = true;
+                //DiveRateUpErrorMessage.Visible = true;
                 canCalculate = false;
+                return;
             }
             else
             {
-                DiveRateUpErrorMessage.Visible = false;
+                //DiveRateUpErrorMessage.Visible = false;
             }
 
 
             //validate that there is a start time
-            if (string.IsNullOrEmpty(DiveTableGridView.Rows[1].Cells[0].Value.ToString()))
+            if (string.IsNullOrEmpty(DiveTableGridView.Rows[1].Cells[0].Value.ToString()) && canCalculate)
             {
                 CompressBeginTimeErrorMessage.Visible = true;
                 canCalculate = false;
+                return;
             }
             else
             {
                 CompressBeginTimeErrorMessage.Visible = false;
             }
 
-            return canCalculate;
+
+            //return canCalculate;
+            if (canCalculate)
+            {
+                CalculateDiveTable();
+            }
+            else
+            {
+                MessageBox.Show("Could not calculate, please try again later.", "System Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+            }
         }
 
         private double calculateMinutesDownOrUp(double ataStart, double ataEnd, double diveRate)
@@ -189,27 +296,7 @@ namespace HBOCalculator
             return startTime;
         }
 
-        //private void resetButton_Click(object sender, EventArgs e)
-        //{
-        //    //CLEAR PREVIOUS ENTRIES
-        //    //for (int col = 0; col < DiveTableGridView.Columns.Count; col++)
-        //        for (int row = 0; row < DiveTableGridView.Rows.Count; row++)
-        //        {
-        //            for (int col = 0; col < DiveTableGridView.Columns.Count; col++)
-        //            //f
-        //            {
-        //            //skip static 1ATA cells and user input time cell
-        //            if ((row == 0 && col == 0) || (row == 1 && col == 0) || (row == 0 && col == 9))
-        //            {
-        //                continue;
-        //            }
-        //            else //clear the rest
-        //            {
-        //                DiveTableGridView.Rows[row].Cells[col].Value = "";
-        //            }
-        //        }
-        //    }
-        //}
+
         private void calculateButton_Click(object sender, EventArgs e)
         {
             Console.WriteLine("clicked");
@@ -217,8 +304,8 @@ namespace HBOCalculator
         private void CalculateDiveTable()
         {
             //test logic for if 
-            if (canCalculate())
-            {
+            //if (canCalculate())
+            //{
                 //calculateButton.BackColor = Color.Green;
 
 
@@ -248,7 +335,8 @@ namespace HBOCalculator
                 double minutesDown = calculateMinutesDownOrUp(startATA, endATA, diveRateDown); //minutes from 1 ATA to at depth
                 double minutesUp = Math.Abs(calculateMinutesDownOrUp(endATA, startATA, diveRateUp));//minutes from at depth to normal 
 
-                DateTime beganAt = DateTime.ParseExact(DiveTableGridView.Rows[1].Cells[0].Value.ToString(), "HH:mm", null); //get userinputted start time
+                
+                DateTime beganAt = DateTime.ParseExact(DiveTableGridView.Rows[1].Cells[0].Value.ToString(), formats, null, DateTimeStyles.None); //get userinputted start time
                 DateTime pressureReached = beganAt.AddMinutes(minutesDown); //add minutes down to start time
 
                 string atDepthStart = pressureReached.ToString("HH:mm"); //convert to time string
@@ -307,17 +395,21 @@ namespace HBOCalculator
 
                 TreatmentLengthTextbox.Text = treatmentLength.TotalMinutes.ToString();
 
-            }
+            //}
         }
 
         private void DiveTableGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
+            DateTime value; //saves value when parsing to convert it to one universal value
+
+
             //bottom row cell edits must either be a 24 hour time format or empty
             if (e.RowIndex == 1) //Top row must be Strings
 
-                //if it doesn't match the time format AND it is not null 
-                if (!DateTime.TryParseExact(e.FormattedValue.ToString(), "HH:mm", null, System.Globalization.DateTimeStyles.None, out _) && !string.IsNullOrEmpty(e.FormattedValue.ToString()))
+                //if it doesn't match the global time formats AND it is not null 
+                if (!DateTime.TryParseExact(e.FormattedValue.ToString(), formats, null, System.Globalization.DateTimeStyles.None, out value) && !string.IsNullOrEmpty(e.FormattedValue.ToString()))
                 {
+
                     //cancel the edit and show the error
                     e.Cancel = true;
                     DiveTableGridView.Rows[e.RowIndex].ErrorText = "Please enter a valid 24-hour time (HH:mm).";
@@ -326,6 +418,19 @@ namespace HBOCalculator
                 {
                     //clear error if valid
                     DiveTableGridView.Rows[e.RowIndex].ErrorText = string.Empty;
+
+                    //change value to HH:mm once validated if there is a value in the box
+
+                    /* NOTE:
+                     * the cell value is not converted until after the cell is validated, however, canCalculate is called as soon as cell is changed in DataGridViewCellChanged()
+                     * that means that when calculateDiveTable is called, it is not necessarily this format that it will see, it may be HHmm or H:mm depending on what is inputted
+                     * if you want calculateDiveTable to parse only this format below, canCalculate must be called from this function rather than DataGridViewCellChanged()
+                     * as of right now, this only changes for aesthetic purposes to keep everything clean and of the same format in the table, not so that this is the value that is parsed
+                     */
+                    if (!string.IsNullOrEmpty(e.FormattedValue.ToString()) ) 
+                    { 
+                        DiveTableGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = value.ToString("HH:mm"); 
+                    }
                 }
         }
 
@@ -337,7 +442,7 @@ namespace HBOCalculator
                 //f
                 {
                     //skip static 1ATA cells and user input time cell
-                    if ((row == 0 && col == 0) || (row == 1 && col == 0) || (row == 0 && col == 9))
+                    if ((row == 0 && col == 0) || (row == 0 && col == 9))
                     {
                         continue;
                     }

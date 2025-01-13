@@ -30,6 +30,7 @@ namespace HBOCalculator
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -65,7 +66,7 @@ namespace HBOCalculator
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lengthAirBreaksTextBox = new System.Windows.Forms.TextBox();
             this.numAirBreaksTextBox = new System.Windows.Forms.TextBox();
-            this.TreatmentProtocolErrorMessage = new System.Windows.Forms.Label();
+            this.ATATextBoxErrorMessage = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.TreatmentProtocolLabel = new System.Windows.Forms.Label();
             this.TreatmentLengthTextbox = new System.Windows.Forms.TextBox();
@@ -74,10 +75,15 @@ namespace HBOCalculator
             this.ATATextBox = new System.Windows.Forms.TextBox();
             this.ATALabel = new System.Windows.Forms.Label();
             this.TreatmentProtocolComboBox = new System.Windows.Forms.ComboBox();
+            this.ATAErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.minWOxygenTextBoxErrorMessage = new System.Windows.Forms.Label();
+            this.numAirBreaksTextBoxErrorMessage = new System.Windows.Forms.Label();
+            this.lengthAirBreaksTextBoxErrorMessage = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.TreatmentDetailsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DiveTableGridView)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ATAErrorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // TreatmentNoLabel
@@ -141,7 +147,7 @@ namespace HBOCalculator
             this.resetButton.BackColor = System.Drawing.SystemColors.ControlDark;
             this.resetButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.resetButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.resetButton.Location = new System.Drawing.Point(669, 118);
+            this.resetButton.Location = new System.Drawing.Point(669, 49);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(225, 45);
             this.resetButton.TabIndex = 12;
@@ -205,12 +211,13 @@ namespace HBOCalculator
             this.calculateButton.BackColor = System.Drawing.SystemColors.ControlDark;
             this.calculateButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.calculateButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.calculateButton.Location = new System.Drawing.Point(669, 54);
+            this.calculateButton.Location = new System.Drawing.Point(669, 102);
             this.calculateButton.Name = "calculateButton";
             this.calculateButton.Size = new System.Drawing.Size(225, 45);
             this.calculateButton.TabIndex = 5;
             this.calculateButton.Text = "Calculate";
             this.calculateButton.UseVisualStyleBackColor = false;
+            this.calculateButton.Visible = false;
             this.calculateButton.Click += new System.EventHandler(this.calculateButton_Click);
             // 
             // DiveTableGridView
@@ -381,9 +388,12 @@ namespace HBOCalculator
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lengthAirBreaksTextBoxErrorMessage);
+            this.groupBox1.Controls.Add(this.numAirBreaksTextBoxErrorMessage);
+            this.groupBox1.Controls.Add(this.minWOxygenTextBoxErrorMessage);
             this.groupBox1.Controls.Add(this.lengthAirBreaksTextBox);
             this.groupBox1.Controls.Add(this.numAirBreaksTextBox);
-            this.groupBox1.Controls.Add(this.TreatmentProtocolErrorMessage);
+            this.groupBox1.Controls.Add(this.ATATextBoxErrorMessage);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.TreatmentProtocolLabel);
             this.groupBox1.Controls.Add(this.TreatmentLengthTextbox);
@@ -417,16 +427,16 @@ namespace HBOCalculator
             this.numAirBreaksTextBox.TabIndex = 9;
             this.numAirBreaksTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // TreatmentProtocolErrorMessage
+            // ATATextBoxErrorMessage
             // 
-            this.TreatmentProtocolErrorMessage.AutoSize = true;
-            this.TreatmentProtocolErrorMessage.ForeColor = System.Drawing.Color.Red;
-            this.TreatmentProtocolErrorMessage.Location = new System.Drawing.Point(772, 146);
-            this.TreatmentProtocolErrorMessage.Name = "TreatmentProtocolErrorMessage";
-            this.TreatmentProtocolErrorMessage.Size = new System.Drawing.Size(220, 20);
-            this.TreatmentProtocolErrorMessage.TabIndex = 6;
-            this.TreatmentProtocolErrorMessage.Text = "Please select or enter a value.";
-            this.TreatmentProtocolErrorMessage.Visible = false;
+            this.ATATextBoxErrorMessage.AutoSize = true;
+            this.ATATextBoxErrorMessage.ForeColor = System.Drawing.Color.Red;
+            this.ATATextBoxErrorMessage.Location = new System.Drawing.Point(83, 157);
+            this.ATATextBoxErrorMessage.Name = "ATATextBoxErrorMessage";
+            this.ATATextBoxErrorMessage.Size = new System.Drawing.Size(208, 20);
+            this.ATATextBoxErrorMessage.TabIndex = 6;
+            this.ATATextBoxErrorMessage.Text = "Please enter a valid number.";
+            this.ATATextBoxErrorMessage.Visible = false;
             // 
             // label1
             // 
@@ -501,6 +511,44 @@ namespace HBOCalculator
             this.TreatmentProtocolComboBox.Visible = false;
             this.TreatmentProtocolComboBox.SelectedIndexChanged += new System.EventHandler(this.TreatmentProtocolComboBox_SelectedIndexChanged);
             // 
+            // ATAErrorProvider
+            // 
+            this.ATAErrorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
+            this.ATAErrorProvider.ContainerControl = this;
+            // 
+            // minWOxygenTextBoxErrorMessage
+            // 
+            this.minWOxygenTextBoxErrorMessage.AutoSize = true;
+            this.minWOxygenTextBoxErrorMessage.ForeColor = System.Drawing.Color.Red;
+            this.minWOxygenTextBoxErrorMessage.Location = new System.Drawing.Point(307, 157);
+            this.minWOxygenTextBoxErrorMessage.Name = "minWOxygenTextBoxErrorMessage";
+            this.minWOxygenTextBoxErrorMessage.Size = new System.Drawing.Size(208, 20);
+            this.minWOxygenTextBoxErrorMessage.TabIndex = 12;
+            this.minWOxygenTextBoxErrorMessage.Text = "Please enter a valid number.";
+            this.minWOxygenTextBoxErrorMessage.Visible = false;
+            // 
+            // numAirBreaksTextBoxErrorMessage
+            // 
+            this.numAirBreaksTextBoxErrorMessage.AutoSize = true;
+            this.numAirBreaksTextBoxErrorMessage.ForeColor = System.Drawing.Color.Red;
+            this.numAirBreaksTextBoxErrorMessage.Location = new System.Drawing.Point(591, 157);
+            this.numAirBreaksTextBoxErrorMessage.Name = "numAirBreaksTextBoxErrorMessage";
+            this.numAirBreaksTextBoxErrorMessage.Size = new System.Drawing.Size(208, 20);
+            this.numAirBreaksTextBoxErrorMessage.TabIndex = 13;
+            this.numAirBreaksTextBoxErrorMessage.Text = "Please enter a valid number.";
+            this.numAirBreaksTextBoxErrorMessage.Visible = false;
+            // 
+            // lengthAirBreaksTextBoxErrorMessage
+            // 
+            this.lengthAirBreaksTextBoxErrorMessage.AutoSize = true;
+            this.lengthAirBreaksTextBoxErrorMessage.ForeColor = System.Drawing.Color.Red;
+            this.lengthAirBreaksTextBoxErrorMessage.Location = new System.Drawing.Point(752, 79);
+            this.lengthAirBreaksTextBoxErrorMessage.Name = "lengthAirBreaksTextBoxErrorMessage";
+            this.lengthAirBreaksTextBoxErrorMessage.Size = new System.Drawing.Size(208, 20);
+            this.lengthAirBreaksTextBoxErrorMessage.TabIndex = 14;
+            this.lengthAirBreaksTextBoxErrorMessage.Text = "Please enter a valid number.";
+            this.lengthAirBreaksTextBoxErrorMessage.Visible = false;
+            // 
             // Calculator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -516,6 +564,7 @@ namespace HBOCalculator
             ((System.ComponentModel.ISupportInitialize)(this.DiveTableGridView)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ATAErrorProvider)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -543,7 +592,7 @@ namespace HBOCalculator
         private System.Windows.Forms.TextBox minWOxygenTextBox;
         private System.Windows.Forms.Label ATALabel;
         private System.Windows.Forms.Button calculateButton;
-        private System.Windows.Forms.Label TreatmentProtocolErrorMessage;
+        private System.Windows.Forms.Label ATATextBoxErrorMessage;
         private System.Windows.Forms.Label DiveRateUpErrorMessage;
         private System.Windows.Forms.Label DiveRateDownErrorMessage;
         private System.Windows.Forms.Label CompressBeginTimeErrorMessage;
@@ -561,5 +610,9 @@ namespace HBOCalculator
         private System.Windows.Forms.Label psiPerMinLabel1;
         private System.Windows.Forms.Label psiPerMinuteLabel2;
         private System.Windows.Forms.Button resetButton;
+        private System.Windows.Forms.ErrorProvider ATAErrorProvider;
+        private System.Windows.Forms.Label lengthAirBreaksTextBoxErrorMessage;
+        private System.Windows.Forms.Label numAirBreaksTextBoxErrorMessage;
+        private System.Windows.Forms.Label minWOxygenTextBoxErrorMessage;
     }
 }
