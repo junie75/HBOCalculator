@@ -158,13 +158,13 @@ namespace HBOCalculator
             if (string.IsNullOrEmpty(ATATextBox.Text) || !double.TryParse(ATATextBox.Text, out _))
             {
                 //TreatmentProtocolErrorProvider.SetError(TreatmentProtocolComboBox, "Please select or enter a value.");
-                ATATextBoxErrorMessage.Visible = true;
+                //ATATextBoxErrorMessage.Visible = true;
                 canCalculate = false;
                 return; //return if error validates to true so it only shows one error at a time
             }
             else
             {
-                ATATextBoxErrorMessage.Visible = false; //remove error message if input is valid
+                //ATATextBoxErrorMessage.Visible = false; //remove error message if input is valid
             }
 
             //validate the treatment protocol combobox
@@ -393,7 +393,7 @@ namespace HBOCalculator
                 //get treatment length
                 TimeSpan treatmentLength = decompressEndTime - beganAt;
 
-                TreatmentLengthTextbox.Text = treatmentLength.TotalMinutes.ToString();
+                TreatmentLengthTextbox.Text = Math.Floor(treatmentLength.TotalMinutes).ToString();
 
             //}
         }
@@ -436,6 +436,16 @@ namespace HBOCalculator
 
         private void resetButton_Click(object sender, EventArgs e)
         {
+            TreatmentLabelTextbox.Text = string.Empty;
+            TreatmentLengthTextbox.Text = string.Empty;
+            ATATextBox.Text = string.Empty;
+            minWOxygenTextBox.Text = string.Empty;
+            numAirBreaksTextBox.Text = string.Empty;
+            lengthAirBreaksTextBox.Text = string.Empty;
+            DiveRateDownComboBox.Text = string.Empty;
+            DiveRateUpComboBox.Text = string.Empty;
+
+
             for (int row = 0; row < DiveTableGridView.Rows.Count; row++)
             {
                 for (int col = 0; col < DiveTableGridView.Columns.Count; col++)

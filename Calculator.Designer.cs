@@ -64,6 +64,9 @@ namespace HBOCalculator
             this.DiveRateUpLabel = new System.Windows.Forms.Label();
             this.DiveRateDownLabel = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lengthAirBreaksTextBoxErrorMessage = new System.Windows.Forms.Label();
+            this.numAirBreaksTextBoxErrorMessage = new System.Windows.Forms.Label();
+            this.minWOxygenTextBoxErrorMessage = new System.Windows.Forms.Label();
             this.lengthAirBreaksTextBox = new System.Windows.Forms.TextBox();
             this.numAirBreaksTextBox = new System.Windows.Forms.TextBox();
             this.ATATextBoxErrorMessage = new System.Windows.Forms.Label();
@@ -76,9 +79,6 @@ namespace HBOCalculator
             this.ATALabel = new System.Windows.Forms.Label();
             this.TreatmentProtocolComboBox = new System.Windows.Forms.ComboBox();
             this.ATAErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.minWOxygenTextBoxErrorMessage = new System.Windows.Forms.Label();
-            this.numAirBreaksTextBoxErrorMessage = new System.Windows.Forms.Label();
-            this.lengthAirBreaksTextBoxErrorMessage = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.TreatmentDetailsGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DiveTableGridView)).BeginInit();
@@ -123,7 +123,6 @@ namespace HBOCalculator
             // 
             // TreatmentDetailsGroupBox
             // 
-            this.TreatmentDetailsGroupBox.Controls.Add(this.resetButton);
             this.TreatmentDetailsGroupBox.Controls.Add(this.psiPerMinuteLabel2);
             this.TreatmentDetailsGroupBox.Controls.Add(this.psiPerMinLabel1);
             this.TreatmentDetailsGroupBox.Controls.Add(this.CompressBeginTimeErrorMessage);
@@ -144,14 +143,18 @@ namespace HBOCalculator
             // 
             // resetButton
             // 
-            this.resetButton.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.resetButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.resetButton.BackColor = System.Drawing.Color.Firebrick;
+            this.resetButton.FlatAppearance.BorderColor = System.Drawing.Color.Firebrick;
+            this.resetButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Red;
+            this.resetButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
+            this.resetButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.resetButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.resetButton.Location = new System.Drawing.Point(669, 49);
+            this.resetButton.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.resetButton.Location = new System.Drawing.Point(1013, 17);
             this.resetButton.Name = "resetButton";
-            this.resetButton.Size = new System.Drawing.Size(225, 45);
+            this.resetButton.Size = new System.Drawing.Size(128, 45);
             this.resetButton.TabIndex = 12;
-            this.resetButton.Text = "Reset";
+            this.resetButton.Text = "Clear";
             this.resetButton.UseVisualStyleBackColor = false;
             this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
             // 
@@ -388,6 +391,7 @@ namespace HBOCalculator
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.resetButton);
             this.groupBox1.Controls.Add(this.lengthAirBreaksTextBoxErrorMessage);
             this.groupBox1.Controls.Add(this.numAirBreaksTextBoxErrorMessage);
             this.groupBox1.Controls.Add(this.minWOxygenTextBoxErrorMessage);
@@ -410,6 +414,39 @@ namespace HBOCalculator
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "HBO Treatment Details";
+            // 
+            // lengthAirBreaksTextBoxErrorMessage
+            // 
+            this.lengthAirBreaksTextBoxErrorMessage.AutoSize = true;
+            this.lengthAirBreaksTextBoxErrorMessage.ForeColor = System.Drawing.Color.Red;
+            this.lengthAirBreaksTextBoxErrorMessage.Location = new System.Drawing.Point(752, 79);
+            this.lengthAirBreaksTextBoxErrorMessage.Name = "lengthAirBreaksTextBoxErrorMessage";
+            this.lengthAirBreaksTextBoxErrorMessage.Size = new System.Drawing.Size(208, 20);
+            this.lengthAirBreaksTextBoxErrorMessage.TabIndex = 14;
+            this.lengthAirBreaksTextBoxErrorMessage.Text = "Please enter a valid number.";
+            this.lengthAirBreaksTextBoxErrorMessage.Visible = false;
+            // 
+            // numAirBreaksTextBoxErrorMessage
+            // 
+            this.numAirBreaksTextBoxErrorMessage.AutoSize = true;
+            this.numAirBreaksTextBoxErrorMessage.ForeColor = System.Drawing.Color.Red;
+            this.numAirBreaksTextBoxErrorMessage.Location = new System.Drawing.Point(591, 157);
+            this.numAirBreaksTextBoxErrorMessage.Name = "numAirBreaksTextBoxErrorMessage";
+            this.numAirBreaksTextBoxErrorMessage.Size = new System.Drawing.Size(208, 20);
+            this.numAirBreaksTextBoxErrorMessage.TabIndex = 13;
+            this.numAirBreaksTextBoxErrorMessage.Text = "Please enter a valid number.";
+            this.numAirBreaksTextBoxErrorMessage.Visible = false;
+            // 
+            // minWOxygenTextBoxErrorMessage
+            // 
+            this.minWOxygenTextBoxErrorMessage.AutoSize = true;
+            this.minWOxygenTextBoxErrorMessage.ForeColor = System.Drawing.Color.Red;
+            this.minWOxygenTextBoxErrorMessage.Location = new System.Drawing.Point(307, 157);
+            this.minWOxygenTextBoxErrorMessage.Name = "minWOxygenTextBoxErrorMessage";
+            this.minWOxygenTextBoxErrorMessage.Size = new System.Drawing.Size(208, 20);
+            this.minWOxygenTextBoxErrorMessage.TabIndex = 12;
+            this.minWOxygenTextBoxErrorMessage.Text = "Please enter a valid number.";
+            this.minWOxygenTextBoxErrorMessage.Visible = false;
             // 
             // lengthAirBreaksTextBox
             // 
@@ -515,39 +552,6 @@ namespace HBOCalculator
             // 
             this.ATAErrorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.ATAErrorProvider.ContainerControl = this;
-            // 
-            // minWOxygenTextBoxErrorMessage
-            // 
-            this.minWOxygenTextBoxErrorMessage.AutoSize = true;
-            this.minWOxygenTextBoxErrorMessage.ForeColor = System.Drawing.Color.Red;
-            this.minWOxygenTextBoxErrorMessage.Location = new System.Drawing.Point(307, 157);
-            this.minWOxygenTextBoxErrorMessage.Name = "minWOxygenTextBoxErrorMessage";
-            this.minWOxygenTextBoxErrorMessage.Size = new System.Drawing.Size(208, 20);
-            this.minWOxygenTextBoxErrorMessage.TabIndex = 12;
-            this.minWOxygenTextBoxErrorMessage.Text = "Please enter a valid number.";
-            this.minWOxygenTextBoxErrorMessage.Visible = false;
-            // 
-            // numAirBreaksTextBoxErrorMessage
-            // 
-            this.numAirBreaksTextBoxErrorMessage.AutoSize = true;
-            this.numAirBreaksTextBoxErrorMessage.ForeColor = System.Drawing.Color.Red;
-            this.numAirBreaksTextBoxErrorMessage.Location = new System.Drawing.Point(591, 157);
-            this.numAirBreaksTextBoxErrorMessage.Name = "numAirBreaksTextBoxErrorMessage";
-            this.numAirBreaksTextBoxErrorMessage.Size = new System.Drawing.Size(208, 20);
-            this.numAirBreaksTextBoxErrorMessage.TabIndex = 13;
-            this.numAirBreaksTextBoxErrorMessage.Text = "Please enter a valid number.";
-            this.numAirBreaksTextBoxErrorMessage.Visible = false;
-            // 
-            // lengthAirBreaksTextBoxErrorMessage
-            // 
-            this.lengthAirBreaksTextBoxErrorMessage.AutoSize = true;
-            this.lengthAirBreaksTextBoxErrorMessage.ForeColor = System.Drawing.Color.Red;
-            this.lengthAirBreaksTextBoxErrorMessage.Location = new System.Drawing.Point(752, 79);
-            this.lengthAirBreaksTextBoxErrorMessage.Name = "lengthAirBreaksTextBoxErrorMessage";
-            this.lengthAirBreaksTextBoxErrorMessage.Size = new System.Drawing.Size(208, 20);
-            this.lengthAirBreaksTextBoxErrorMessage.TabIndex = 14;
-            this.lengthAirBreaksTextBoxErrorMessage.Text = "Please enter a valid number.";
-            this.lengthAirBreaksTextBoxErrorMessage.Visible = false;
             // 
             // Calculator
             // 
