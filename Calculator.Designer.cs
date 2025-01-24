@@ -41,7 +41,6 @@ namespace HBOCalculator
             this.TreatmentLengthLabel = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.TreatmentDetailsGroupBox = new System.Windows.Forms.GroupBox();
-            this.resetButton = new System.Windows.Forms.Button();
             this.psiPerMinuteLabel2 = new System.Windows.Forms.Label();
             this.psiPerMinLabel1 = new System.Windows.Forms.Label();
             this.CompressBeginTimeErrorMessage = new System.Windows.Forms.Label();
@@ -64,6 +63,7 @@ namespace HBOCalculator
             this.DiveRateUpLabel = new System.Windows.Forms.Label();
             this.DiveRateDownLabel = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.resetButton = new System.Windows.Forms.Button();
             this.lengthAirBreaksTextBoxErrorMessage = new System.Windows.Forms.Label();
             this.numAirBreaksTextBoxErrorMessage = new System.Windows.Forms.Label();
             this.minWOxygenTextBoxErrorMessage = new System.Windows.Forms.Label();
@@ -97,7 +97,7 @@ namespace HBOCalculator
             // 
             // TreatmentLabelTextbox
             // 
-            this.TreatmentLabelTextbox.Location = new System.Drawing.Point(191, 29);
+            this.TreatmentLabelTextbox.Location = new System.Drawing.Point(191, 30);
             this.TreatmentLabelTextbox.Name = "TreatmentLabelTextbox";
             this.TreatmentLabelTextbox.Size = new System.Drawing.Size(100, 26);
             this.TreatmentLabelTextbox.TabIndex = 1;
@@ -140,23 +140,6 @@ namespace HBOCalculator
             this.TreatmentDetailsGroupBox.TabIndex = 4;
             this.TreatmentDetailsGroupBox.TabStop = false;
             this.TreatmentDetailsGroupBox.Text = "Treatment Details";
-            // 
-            // resetButton
-            // 
-            this.resetButton.BackColor = System.Drawing.Color.Firebrick;
-            this.resetButton.FlatAppearance.BorderColor = System.Drawing.Color.Firebrick;
-            this.resetButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Red;
-            this.resetButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
-            this.resetButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.resetButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.resetButton.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.resetButton.Location = new System.Drawing.Point(1013, 17);
-            this.resetButton.Name = "resetButton";
-            this.resetButton.Size = new System.Drawing.Size(128, 45);
-            this.resetButton.TabIndex = 12;
-            this.resetButton.Text = "Clear";
-            this.resetButton.UseVisualStyleBackColor = false;
-            this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
             // 
             // psiPerMinuteLabel2
             // 
@@ -415,6 +398,24 @@ namespace HBOCalculator
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "HBO Treatment Details";
             // 
+            // resetButton
+            // 
+            this.resetButton.BackColor = System.Drawing.Color.Firebrick;
+            this.resetButton.FlatAppearance.BorderColor = System.Drawing.Color.Firebrick;
+            this.resetButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Red;
+            this.resetButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
+            this.resetButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.resetButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.resetButton.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.resetButton.Location = new System.Drawing.Point(1013, 17);
+            this.resetButton.Name = "resetButton";
+            this.resetButton.Size = new System.Drawing.Size(128, 45);
+            this.resetButton.TabIndex = 12;
+            this.resetButton.TabStop = false;
+            this.resetButton.Text = "Clear";
+            this.resetButton.UseVisualStyleBackColor = false;
+            this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
+            // 
             // lengthAirBreaksTextBoxErrorMessage
             // 
             this.lengthAirBreaksTextBoxErrorMessage.AutoSize = true;
@@ -545,8 +546,8 @@ namespace HBOCalculator
             this.TreatmentProtocolComboBox.Name = "TreatmentProtocolComboBox";
             this.TreatmentProtocolComboBox.Size = new System.Drawing.Size(431, 28);
             this.TreatmentProtocolComboBox.TabIndex = 5;
+            this.TreatmentProtocolComboBox.TabStop = false;
             this.TreatmentProtocolComboBox.Visible = false;
-            this.TreatmentProtocolComboBox.SelectedIndexChanged += new System.EventHandler(this.TreatmentProtocolComboBox_SelectedIndexChanged);
             // 
             // ATAErrorProvider
             // 
