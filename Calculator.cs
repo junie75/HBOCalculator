@@ -34,27 +34,53 @@ namespace HBOCalculator
 
             //assigns my functions to appropriate controls
             DiveTableGridView.CellValidating += DiveTableGridView_CellValidating;
+            //DiveTableGridView.CellValueChanged += DataGridViewCellChanged;
 
             resetButton.Click += resetButton_Click;
 
-            ATATextBox.Validating += TextBox_Validating;
-            minWOxygenTextBox.Validating += TextBox_Validating;
-            numAirBreaksTextBox.Validating += TextBox_Validating;
-            lengthAirBreaksTextBox.Validating += TextBox_Validating;
-            DiveRateDownComboBox.Validating += ComboBox_Validating;
-            DiveRateUpComboBox.Validating += ComboBox_Validating;
+            //ATATextBox.Validating += TextBox_Validating;
+            //minWOxygenTextBox.Validating += TextBox_Validating;
+            //numAirBreaksTextBox.Validating += TextBox_Validating;
+            //lengthAirBreaksTextBox.Validating += TextBox_Validating;
+            //DiveRateDownComboBox.Validating += ComboBox_Validating;
+            //DiveRateUpComboBox.Validating += ComboBox_Validating;
 
             this.FormClosing += Calculator_FormClosing;
 
             //DiveRateDownComboBox.Validated += ComboBox_Validated;
             //DiveRateUpComboBox.Validated += ComboBox_Validated;
+
+            ATATextBox.TextChanged += ComponentChanged;
+            minWOxygenTextBox.TextChanged += ComponentChanged;
+            numAirBreaksTextBox.TextChanged += ComponentChanged;
+            lengthAirBreaksTextBox.TextChanged += ComponentChanged;
+            DiveRateDownComboBox.TextChanged += ComponentChanged;
+            DiveRateUpComboBox.TextChanged += ComponentChanged;
+            DiveRateDownComboBox.SelectionChangeCommitted += ComponentChanged;
+            DiveRateUpComboBox.SelectionChangeCommitted += ComponentChanged;
         }
 
-
+        //function to track when input boxes are changed 
         private void ComponentChanged(object sender, EventArgs e)
         {
             //CalculateDiveTable();
             //canCalculate();
+            CancelEventArgs cancelEventArgs = new CancelEventArgs(); //creates a cancelEventArgs to send to validating functions
+            if((sender is System.Windows.Forms.ComboBox))
+            {
+                Console.WriteLine("This is " + (sender as System.Windows.Forms.ComboBox).Name + " that changed");
+                //Console.WriteLine(sender.GetType()  + sender.GetType().FullName);
+               
+                
+                ComboBox_Validating(sender, cancelEventArgs);
+            }
+            else if (sender is System.Windows.Forms.TextBox)
+            {
+                Console.WriteLine("This is " + (sender as System.Windows.Forms.TextBox).Name + " that changed");
+                //Console.WriteLine(sender.GetType() + sender.GetType().FullName);
+                //TextBox_Validating(sender as System.Windows.Forms.TextBox, e as CancelEventArgs);
+                TextBox_Validating(sender, cancelEventArgs);
+            }
         }
 
         private void DataGridViewCellChanged(object sender, DataGridViewCellEventArgs e)
@@ -62,15 +88,44 @@ namespace HBOCalculator
             // Trigger Calculate() only for Row 1, Cell 0 (Start time Update)
             if (e.RowIndex == 1 && e.ColumnIndex == 0)
             {
+                
                 //CalculateDiveTable();
                 //canCalculate();
+                //DiveTableGridView_CellValidating(sender, DataGridViewCellValidatingEventArgs as DataGridViewCellEventArgs);
+            }
+
+            DateTime value; //saves value when parsing to convert it to one universal value
+            object formattedValue = DiveTableGridView.Rows[1].Cells[0].Value;
+
+            //bottom row cell edits must either be a 24 hour time format or empty
+            if (e.RowIndex == 1)
+            {
+
+                //if it doesn't match the global time formats AND it is not null (it's ok for it to be null)
+                if (!DateTime.TryParseExact(DiveTableGridView.Rows[1].Cells[0].Value.ToString(), formats, null, System.Globalization.DateTimeStyles.None, out value) && !string.IsNullOrEmpty(DiveTableGridView.Rows[1].Cells[0].Value.ToString()))
+                {
+
+                    //cancel the edit and show the error
+                    //e.Cancel = true;
+                    DiveTableGridView.Rows[e.RowIndex].ErrorText = "Please enter a valid 24-hour time (HH:mm).";
+                }
+                else
+                {
+                    //clear error if valid
+                    DiveTableGridView.Rows[e.RowIndex].ErrorText = string.Empty;
+
+
+                    //    }
+                    canCalculate();
+                }
             }
         }
 
         private void ComboBox_Validating(object sender, CancelEventArgs e)
         {
+            Console.WriteLine("This is " + (sender as System.Windows.Forms.ComboBox).Name + " in ComboBox validating");
             //if the value in the combo box is not a decimal number, cancel the event
-            if(!double.TryParse((sender as System.Windows.Forms.ComboBox).Text, out _))
+            if (!double.TryParse((sender as System.Windows.Forms.ComboBox).Text, out _))
             {
                 e.Cancel = true;
                 ATAErrorProvider.SetError((sender as System.Windows.Forms.ComboBox), "Please enter a valid decimal number");
@@ -94,6 +149,7 @@ namespace HBOCalculator
 
         private void TextBox_Validating(object sender, CancelEventArgs e)
         {
+            Console.WriteLine("This is " + (sender as System.Windows.Forms.TextBox).Name + " in TextBox validating");
             //validate textboxes as double or int based on which textbox it is
             if ((sender as System.Windows.Forms.TextBox).Name == "ATATextBox")
             {
@@ -191,76 +247,76 @@ namespace HBOCalculator
             bool canCalculate = true;
 
 
-            //make sure that ata textbox is a valid double and that there is no error attached
-            if ((string.IsNullOrEmpty(ATATextBox.Text) || !double.TryParse(ATATextBox.Text, out _)) && ATAErrorProvider.GetError(ATATextBox) != string.Empty)
+            //make sure that ata textbox is a valid double or that there is no error attached
+            if ((string.IsNullOrEmpty(ATATextBox.Text) || !double.TryParse(ATATextBox.Text, out _)) || ATAErrorProvider.GetError(ATATextBox) != string.Empty)
             {
                 //TreatmentProtocolErrorProvider.SetError(TreatmentProtocolComboBox, "Please select or enter a value.");
                 //ATATextBoxErrorMessage.Visible = true;
                 canCalculate = false;
-                return; //return if error validates to true so it only shows one error at a time
+                return; //return if error validates to true so it stops execution at this point
             }
             else
             {
                 //ATATextBoxErrorMessage.Visible = false; //remove error message if input is valid
             }
 
-            //make sure that textbox is a valid int and that there is no error attached
-            if ((string.IsNullOrEmpty(minWOxygenTextBox.Text) || !int.TryParse(minWOxygenTextBox.Text, out _)) && ATAErrorProvider.GetError(minWOxygenTextBox) != string.Empty)
+            //make sure that textbox is a valid int or that there is no error attached
+            if ((string.IsNullOrEmpty(minWOxygenTextBox.Text) || !int.TryParse(minWOxygenTextBox.Text, out _)) || ATAErrorProvider.GetError(minWOxygenTextBox) != string.Empty)
             {
                 //TreatmentProtocolErrorProvider.SetError(TreatmentProtocolComboBox, "Please select or enter a value.");
                 //minWOxygenTextBoxErrorMessage.Visible = true;
                 canCalculate = false;
-                return; //return if error validates to true so it only shows one error at a time
+                return; //return if error validates to true so it stops execution at this point
             }
             else
             {
                 //minWOxygenTextBoxErrorMessage.Visible = false; //remove error message if input is valid
             }
 
-            //make sure that textbox is a valid int, that it is not greater than 3 breaks and that there is no error attached
-            if ((string.IsNullOrEmpty(numAirBreaksTextBox.Text) || !int.TryParse(numAirBreaksTextBox.Text, out _) || int.Parse(numAirBreaksTextBox.Text) > 3) && ATAErrorProvider.GetError(numAirBreaksTextBox) != string.Empty)
+            //make sure that textbox is a valid int, that it is not greater than 3 breaks or that there is no error attached
+            if ((string.IsNullOrEmpty(numAirBreaksTextBox.Text) || !int.TryParse(numAirBreaksTextBox.Text, out _) || int.Parse(numAirBreaksTextBox.Text) > 3) || ATAErrorProvider.GetError(numAirBreaksTextBox) != string.Empty)
             {
                 //TreatmentProtocolErrorProvider.SetError(TreatmentProtocolComboBox, "Please select or enter a value.");
                 //numAirBreaksTextBoxErrorMessage.Visible = true;
                 canCalculate = false;
-                return; //return if error validates to true so it only shows one error at a time
+                return; //return if error validates to true so it stops execution at this point
             }
             else
             {
                 //numAirBreaksTextBoxErrorMessage.Visible = false; //remove error message if input is valid
             }
 
-            //make sure that textbox is a valid int and that there is no error attached
-            if ((string.IsNullOrEmpty(lengthAirBreaksTextBox.Text) || !int.TryParse(lengthAirBreaksTextBox.Text, out _)) && ATAErrorProvider.GetError(lengthAirBreaksTextBox) != string.Empty)
+            //make sure that textbox is a valid int or that there is no error attached
+            if ((string.IsNullOrEmpty(lengthAirBreaksTextBox.Text) || !int.TryParse(lengthAirBreaksTextBox.Text, out _)) || ATAErrorProvider.GetError(lengthAirBreaksTextBox) != string.Empty)
             {
                 //TreatmentProtocolErrorProvider.SetError(TreatmentProtocolComboBox, "Please select or enter a value.");
                 //lengthAirBreaksTextBoxErrorMessage.Visible = true;
                 canCalculate = false;
-                return; //return if error validates to true so it only shows one error at a time
+                return; //return if error validates to true so it stops execution at this point
             }
             else
             {
                 //lengthAirBreaksTextBoxErrorMessage.Visible = false; //remove error message if input is valid
             }
 
-            //make sure that combobox is a valid double and that there is no error attached
-            if ((string.IsNullOrEmpty(DiveRateDownComboBox.Text) || !double.TryParse(DiveRateDownComboBox.Text, out _)) && ATAErrorProvider.GetError(DiveRateDownComboBox) != string.Empty)
+            //make sure that combobox is a valid double or that there is no error attached
+            if ((string.IsNullOrEmpty(DiveRateDownComboBox.Text) || !double.TryParse(DiveRateDownComboBox.Text, out _)) || ATAErrorProvider.GetError(DiveRateDownComboBox) != string.Empty)
             {
                 //DiveRateDownErrorMessage.Visible = true;
                 canCalculate = false;
-                return;
+                return; //return if error validates to true so it stops execution at this point
             }
             else
             {
                 //DiveRateDownErrorMessage.Visible = false;
             }
 
-            //make sure that combobox is a valid double and that there is no error attached
-            if ((string.IsNullOrEmpty(DiveRateUpComboBox.Text) || !double.TryParse(DiveRateUpComboBox.Text, out _)) && ATAErrorProvider.GetError(DiveRateUpComboBox) != string.Empty)
+            //make sure that combobox is a valid double or that there is no error attached
+            if ((string.IsNullOrEmpty(DiveRateUpComboBox.Text) || !double.TryParse(DiveRateUpComboBox.Text, out _)) || ATAErrorProvider.GetError(DiveRateUpComboBox) != string.Empty)
             {
                 //DiveRateUpErrorMessage.Visible = true;
                 canCalculate = false;
-                return;
+                return;//return if error validates to true so it stops execution at this point
             }
             else
             {
