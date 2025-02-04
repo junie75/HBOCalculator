@@ -204,7 +204,7 @@ namespace HBOCalculator
             this.calculateButton.Text = "Calculate";
             this.calculateButton.UseVisualStyleBackColor = false;
             this.calculateButton.Visible = false;
-            this.calculateButton.Click += new System.EventHandler(this.calculateButton_Click);
+
             // 
             // DiveTableGridView
             // 
@@ -243,6 +243,7 @@ namespace HBOCalculator
             this.DiveTableGridView.DefaultCellStyle = dataGridViewCellStyle3;
             this.DiveTableGridView.EnableHeadersVisualStyles = false;
             this.DiveTableGridView.Location = new System.Drawing.Point(0, 200);
+            this.DiveTableGridView.MultiSelect = false;
             this.DiveTableGridView.Name = "DiveTableGridView";
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.ControlDark;
