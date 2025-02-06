@@ -24,7 +24,11 @@ namespace HBOCalculator
         {
             InitializeComponent();
             this.AutoValidate = AutoValidate.EnableAllowFocusChange; //allows user to click into other boxes even if the focused control has invalid data
- 
+
+            //add key handler events to detect return key and move to next control
+            this.PreviewKeyDown += new PreviewKeyDownEventHandler(Control_PreviewKeyDown);
+            this.KeyDown += new KeyEventHandler(Control_KeyDown);
+                
             //initializes data table
             DiveTableGridView.Rows.Add("1 ATA", "", "", "", "", "", "", "", "", "1 ATA");
             DiveTableGridView.Rows.Add("", "", "", "", "", "", "", "", "", "");
@@ -50,6 +54,8 @@ namespace HBOCalculator
             DiveRateUpComboBox.TextChanged += ComponentChanged;
             DiveRateDownComboBox.SelectionChangeCommitted += ComponentChanged;
             DiveRateUpComboBox.SelectionChangeCommitted += ComponentChanged;
+
+
 
 
         }
@@ -425,11 +431,32 @@ namespace HBOCalculator
         }
 
         //runs when the form is being closed (x button is pressed and application is exited)
-        private void Calculator_FormClosing(Object sender, FormClosingEventArgs e)
+        private void Calculator_FormClosing(object sender, FormClosingEventArgs e)
         {
             //prevents errors from cancelling the close event. form can be closed whether or not there is invalid data
             e.Cancel = false;
         }
+
+        //function to preview the key, only used to set return(enter) as an input key so that it can raise the keydown event
+        private void Control_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.IsInputKey = true; 
+            }
+        }
+
+        //function to activate the next control in the tab order when the enter key is pressed. 
+        private void Control_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter)
+            {
+                Control ctl = (Control)sender;
+                ctl.SelectNextControl(ActiveControl, true, true, true, true); //active control gets the currently active control in the container control
+                e.SuppressKeyPress = true; //used so that windows "bell" sound does not occur on press
+            }
+        }
+
     }
 
 }

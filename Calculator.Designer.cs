@@ -204,7 +204,6 @@ namespace HBOCalculator
             this.calculateButton.Text = "Calculate";
             this.calculateButton.UseVisualStyleBackColor = false;
             this.calculateButton.Visible = false;
-
             // 
             // DiveTableGridView
             // 
@@ -256,6 +255,7 @@ namespace HBOCalculator
             this.DiveTableGridView.RowHeadersWidth = 120;
             this.DiveTableGridView.RowTemplate.Height = 28;
             this.DiveTableGridView.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.DiveTableGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DiveTableGridView.Size = new System.Drawing.Size(1182, 209);
             this.DiveTableGridView.TabIndex = 4;
             // 
@@ -562,6 +562,7 @@ namespace HBOCalculator
             this.ClientSize = new System.Drawing.Size(1441, 694);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.Name = "Calculator";
             this.Text = "Ejere Wound Care HBO Calculator";
             this.panel1.ResumeLayout(false);
